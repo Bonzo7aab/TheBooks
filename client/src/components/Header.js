@@ -13,6 +13,7 @@ import MicroLibrary from './MicroLibrary'
 import './css/header.css'
 import image1 from '../utils/image1.png'
 import logo from '../utils/logo.png'
+import RegisterLogin from './RegisterLogin';
 
 class Header extends Component {
   render() {
@@ -22,8 +23,8 @@ class Header extends Component {
           <ul className='top-menu'>
             <li>PL/EN</li>
             <li><Link to='/basket'>Basket</Link></li>
-            <li>Login</li>
-            <li>Register</li>
+            <li><Link to='/registerLogin'>Login</Link></li>
+            <li><Link to='/registerLogin'>Register</Link></li>
             <li><Link to='/contact'>Contact</Link></li>
           </ul>
           <div className='header-images'>
@@ -56,9 +57,10 @@ class Header extends Component {
           <News />
           <div className='ui divider'></div>
 
-          <Route path='/' exact component={About} />
+          <Route path='/registerLogin' component={RegisterLogin} />
           <Route path='/basket' component={Basket} />
           <Route path='/contact' component={Contact} />
+          <Route path='/' exact component={About} />
           <Route path='/catalog' component={Catalog} />
           <Route path='/terms' component={Terms} />
           <Route path='/faq' component={Faq} />

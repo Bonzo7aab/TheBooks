@@ -2,8 +2,23 @@ const graphql = require('graphql');
 const _ = require('lodash')
 const Book = require('../model/book')
 const Author = require('../model/author')
+const User = require('../model/user')
 
 const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLID, GraphQLInt, GraphQLList, GraphQLNonNull } = graphql;
+
+
+const UserType = new GraphQLObjectType({
+  name: 'User',
+  fileds: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+    surname: { type: GraphQLString },
+    email: { type: GraphQLString },
+    password: { type: GraphQLString },
+    confirmPassword: { type: GraphQLString }
+  })
+})
+
 
 const BookType = new GraphQLObjectType({
   name: 'Book',
