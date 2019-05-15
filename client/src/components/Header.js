@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
+import Register from './Register';
+import Login from './Login';
 import Basket from './Basket';
 import Contact from './Contact';
 import News from './News';
@@ -13,7 +15,6 @@ import MicroLibrary from './MicroLibrary'
 import './css/header.css'
 import image1 from '../utils/image1.png'
 import logo from '../utils/logo.png'
-import RegisterLogin from './RegisterLogin';
 
 class Header extends Component {
   render() {
@@ -23,8 +24,8 @@ class Header extends Component {
           <ul className='top-menu'>
             <li>PL/EN</li>
             <li><Link to='/basket'>Basket</Link></li>
-            <li><Link to='/registerLogin'>Login</Link></li>
-            <li><Link to='/registerLogin'>Register</Link></li>
+            <li><Link to='/register'>Register</Link></li>
+            <li><Link to='/login'>Login</Link></li>
             <li><Link to='/contact'>Contact</Link></li>
           </ul>
           <div className='header-images'>
@@ -57,7 +58,8 @@ class Header extends Component {
           <News />
           <div className='ui divider'></div>
 
-          <Route path='/registerLogin' component={RegisterLogin} />
+          <Route path='/register' component={Register} />
+          <Route path='/login' component={Login} />
           <Route path='/basket' component={Basket} />
           <Route path='/contact' component={Contact} />
           <Route path='/' exact component={About} />

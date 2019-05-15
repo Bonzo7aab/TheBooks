@@ -7,9 +7,13 @@ const bodyParser = require('body-parser')
 const User = require('./model/user')
 const bcrypt = require('bcryptjs')
 const session = require('express-session')
+const passport = require('passport')
+
 
 const app = express()
 
+//Passport config
+require('./config/passport')(passport)
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -20,6 +24,10 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }))
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 mongoose.connect('mongodb+srv://bonzo:Matadoro1@cluster0-4mujf.mongodb.net/test?retryWrites=true', { useNewUrlParser: true })
 mongoose.connection.once('open', () => {
@@ -33,17 +41,17 @@ app.use('/graphql', graphqlHTTP({
 
 
 //Express routuing for connection with backend
-app.post('/registerLogin', (req, res) => {
-  const { signUpName, signUpSurname, signUpEmail, signUpPassword, signUpConfirmPassword } = req.body
+app.post('/register', (req, res) => {
+  const { userName, userSurname, userEmail, userPassword, userConfirmPassword } = req.body
   let errors = []
 
-  if (!signUpName || !signUpSurname || !signUpEmail || !signUpPassword || !signUpConfirmPassword) {
+  if (!userName || !userSurname || !userEmail || !userPassword || !userConfirmPassword) {
     errors.push({ msg: 'Please fill all fileds' })
   }
-  if (signUpPassword !== signUpConfirmPassword) {
+  if (userPassword !== userConfirmPassword) {
     errors.push({ msg: 'Passwords do not match' })
   }
-  if (signUpPassword.length < 6) {
+  if (userPassword.length < 6) {
     errors.push({ msg: 'Passwords should be at least 6 characters' })
   }
 
@@ -51,7 +59,7 @@ app.post('/registerLogin', (req, res) => {
   if (errors.length > 0) {
     res.send(errors)
   } else {
-    User.findOne({ signUpEmail: signUpEmail })
+    User.findOne({ userEmail: userEmail })
 
       .then(user => {
         if (user) {
@@ -59,17 +67,17 @@ app.post('/registerLogin', (req, res) => {
           res.send(errors)
         } else {
           const newUser = new User({
-            signUpName,
-            signUpSurname,
-            signUpEmail,
-            signUpPassword
+            userName,
+            userSurname,
+            userEmail,
+            userPassword
           })
 
-          bcrypt.genSalt(10, (err, salt) => bcrypt.hash(newUser.signUpPassword, salt, (err, hash) => {
+          bcrypt.genSalt(10, (err, salt) => bcrypt.hash(newUser.userPassword, salt, (err, hash) => {
             if (err) throw err;
 
             // set pass to hash
-            newUser.signUpPassword = hash
+            newUser.userPassword = hash
             // save user
             newUser.save()
               .then(res.send('registered success'))
@@ -81,7 +89,18 @@ app.post('/registerLogin', (req, res) => {
   }
 })
 
+app.post('/login', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) return next(err)
+    if (!user) return res.send({ msg: 'No such user' })
 
+    req.logIn(user, (err) => {
+      if (err) return next(err)
+
+      return res.send({ msg: 'You are logged in ' + user.userName })
+    })
+  })(req, res, next)
+})
 
 
 
