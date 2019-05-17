@@ -80,7 +80,9 @@ app.post('/register', (req, res) => {
             newUser.userPassword = hash
             // save user
             newUser.save()
-              .then(res.send('registered success'))
+              .then(
+                res.send('registered success')
+              )
               .catch(err => console.log(err))
 
           }))
@@ -97,7 +99,7 @@ app.post('/login', (req, res, next) => {
     req.logIn(user, (err) => {
       if (err) return next(err)
 
-      return res.send({ msg: 'You are logged in ' + user.userName })
+      return res.send({ msg: 'You are logged in ' + user.userName, loggedIn: true })
     })
   })(req, res, next)
 })

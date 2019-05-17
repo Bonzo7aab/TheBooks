@@ -7,7 +7,9 @@ class Register extends Component {
     userSurname: '',
     userEmail: '',
     userPassword: '',
-    userConfirmPassword: ''
+    userConfirmPassword: '',
+    messageHidden: true,
+    messageText: []
   }
 
 
@@ -25,7 +27,7 @@ class Register extends Component {
     axios.post('http://localhost:4000/register', data
     )
       .then((res) => {
-        console.log(res.data)
+        this.setState({ messageHidden: false, messageText: res.data })
       })
       .catch((error) => {
         console.log(error)
@@ -36,6 +38,9 @@ class Register extends Component {
     return (
       <div>
         <form className="ui form" onSubmit={this.formSubmit}>
+          {this.state.messageText.map(message => (
+            <div className="ui red message" key={message.msg} hidden={this.state.messageHidden}>{message.msg}</div>
+          ))}
           <div className="field">
             <label>Name</label>
             <input type="text" name='name' onChange={(e) => this.setState({ userName: e.target.value })} />
@@ -46,15 +51,15 @@ class Register extends Component {
           </div>
           <div className="field">
             <label>Email</label>
-            <input type="text" name='email' onChange={(e) => this.setState({ userEmail: e.target.value })} />
+            <input type="email" name='email' onChange={(e) => this.setState({ userEmail: e.target.value })} />
           </div>
           <div className="field">
             <label>Password</label>
-            <input type="text" name='password' onChange={(e) => this.setState({ userPassword: e.target.value })} />
+            <input type="password" name='password' onChange={(e) => this.setState({ userPassword: e.target.value })} />
           </div>
           <div className="field">
             <label>Confirm Password</label>
-            <input type="text" name='confirmPassword' onChange={(e) => this.setState({ userConfirmPassword: e.target.value })} />
+            <input type="password" name='confirmPassword' onChange={(e) => this.setState({ userConfirmPassword: e.target.value })} />
           </div>
           <button>Register</button>
         </form>
