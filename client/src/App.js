@@ -5,7 +5,6 @@ import { ApolloProvider } from 'react-apollo'
 import Header from './components/Header';
 import Footer from './components/Footer';
 
-
 import './components/css/app.css'
 
 //Apollo client setup

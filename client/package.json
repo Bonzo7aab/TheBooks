@@ -5,12 +5,17 @@
   "dependencies": {
     "apollo-boost": "^0.3.1",
     "axios": "^0.18.0",
+    "google-maps-react": "^2.0.2",
     "graphql": "^14.3.0",
     "react": "^16.8.6",
     "react-apollo": "^2.5.5",
     "react-dom": "^16.8.6",
+    "react-facebook": "^8.0.4",
+    "react-google-maps": "^9.4.5",
+    "react-redux": "^7.0.3",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "redux": "^4.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
