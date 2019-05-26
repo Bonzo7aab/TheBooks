@@ -1,6 +1,15 @@
-export const loggeIn = loggedIn => {
+// ACTION TYPES
+const LOG_IN = 'LOG_IN'
+const LOG_OUT = 'LOG_IN'
+
+
+
+
+
+
+export const loginUser = user => {
   return {
-    type: 'LOGGED_IN',
-    payload: 'yes - logged'
+    type: LOG_IN
+    // payload: user
   }
 }

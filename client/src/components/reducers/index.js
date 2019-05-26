@@ -1,28 +1,40 @@
 import { combineReducers } from 'redux'
 
-
-const sessionReducer = () => {
-  return [
-    { user: 'Michal', loggedIn: true },
-    { user: 'Jeff', loggedIn: false },
-    { user: 'Hank', loggedIn: false }
-  ]
+const initialState = {
+  registered: false,
+  loggedIn: false,
+  loggedInADMIN: false
 }
 
-const loggedInReducer = (state = null, action) => {
+const userFormReducer = (state = initialState, action) => {
+  //console.log('reducer', state, action)
   switch (action.type) {
+    case 'REGISTER_SUCCESS':
+      return { registered: true }
+    case 'REGISTER_FAIL':
+      return { registered: false }
     case 'LOGGED_IN':
-      return { loggedIn: true }
+      return { ...state, loggedIn: true, payload: action.payload }
     case 'NOT_LOGGED_IN':
-      return { loggedIn: false }
+      return { ...state, loggedIn: false, payload: action.payload }
     case 'LOGGED_OUT':
-      return { loggedIn: false }
+      return {
+        loggedIn: false,
+        loggedInADMIN: false
+      }
+    case 'LOGGED_IN_ADMIN':
+      return { loggedInADMIN: true }
     default:
       return state
   }
 }
 
-export default combineReducers({
-  user: sessionReducer,
-  loggedIn: loggedInReducer
-})
+
+
+// Naprawic combinedReducers
+
+export default userFormReducer
+
+// export default combineReducers({
+//   loggedIn: userFormReducer
+// })
