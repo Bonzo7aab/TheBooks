@@ -12,12 +12,12 @@ import userFormReducer from './components/reducers'
 // STORE
 const store = createStore(userFormReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
 
-store.dispatch({ type: 'LOGGED_IN', payload: '44543' })
-console.log(store.getState())
-store.dispatch({ type: 'NOT_LOGGED_IN', payload: 'not' })
-console.log(store.getState())
-store.dispatch({ type: 'LOGGED_IN', payload: '4asdads' })
-console.log(store.getState())
+// store.dispatch({ type: 'LOGGED_IN', payload: '44543' })
+// console.log(store.getState())
+// store.dispatch({ type: 'NOT_LOGGED_IN', payload: 'not' })
+// console.log(store.getState())
+// store.dispatch({ type: 'LOGGED_IN', payload: '4asdads' })
+// console.log(store.getState())
 
 
 

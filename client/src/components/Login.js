@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import { connect } from 'react-redux'
+import { loginUser } from './actions'
 
 class Login extends Component {
   state = {
@@ -29,6 +31,11 @@ class Login extends Component {
       })
   }
 
+  reduxCall = () => {
+    console.log(this.props)
+    //this.props.state.dispatch(loggedUser())
+  }
+
   render() {
     return (
       <div>
@@ -43,10 +50,18 @@ class Login extends Component {
             <input type="password" name='password' onChange={(e) => this.setState({ userPassword: e.target.value })} />
           </div>
           <button>Login</button>
+          <button onClick={this.reduxCall}>Redux</button>
         </form>
       </div>
     )
   }
 }
 
-export default Login
+const mapStateToProps = state => {
+  return {
+    state,
+    loggedIn: state.loggedIn
+  }
+}
+
+export default connect(mapStateToProps, { loginUser })(Login)
