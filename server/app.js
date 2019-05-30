@@ -63,7 +63,7 @@ app.post('/register', (req, res) => {
 
       .then(user => {
         if (user) {
-          errors.push({ msg: 'Email is already existing' })
+          errors.push({ msg: 'Email is already taken' })
           res.send(errors)
         } else {
           const newUser = new User({
@@ -81,7 +81,7 @@ app.post('/register', (req, res) => {
             // save user
             newUser.save()
               .then(
-                res.send('registered success')
+                res.send('Registered successfully')
               )
               .catch(err => console.log(err))
 
@@ -94,12 +94,22 @@ app.post('/register', (req, res) => {
 app.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) return next(err)
-    if (!user) return res.send({ msg: 'No such user' })
+    if (!user) return res.send({ msg: 'No such user', loggedIn: false })
 
     req.logIn(user, (err) => {
       if (err) return next(err)
 
-      return res.send({ msg: 'You are logged in ' + user.userName, loggedIn: true })
+      return res.send({
+        msg: 'You are logged in ' + user.userName,
+        loggedIn: true,
+        user: {
+          userId: user._id,
+          userDate: user.date,
+          userName: user.userName,
+          userSurname: user.userSurname,
+          userEmail: user.userEmail
+        }
+      })
     })
   })(req, res, next)
 })

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import { connect } from 'react-redux'
 
 import Register from './Register';
 import Login from './Login';
@@ -11,13 +12,26 @@ import Catalog from './Catalog';
 import Terms from './Terms';
 import Faq from './Faq'
 import MicroLibrary from './MicroLibrary'
+import Private from './Private'
 
 import './css/header.css'
 import image1 from '../utils/image1.png'
 import logo from '../utils/logo.png'
 
+
+const PrivateRoute = ({ component: Component, loggedIn, ...rest }) => (
+  <Route {...rest} render={props => (
+    loggedIn === true
+      ? <Component {...props} />
+      : <Redirect to='/contact' />
+  )} />
+)
+
+
+
 class Header extends Component {
   render() {
+    console.log(this.props)
     return (
       <div>
         <Router basename='/pl'>
@@ -67,6 +81,7 @@ class Header extends Component {
           <Route path='/terms' component={Terms} />
           <Route path='/faq' component={Faq} />
           <Route path='/microlibrary' component={MicroLibrary} />
+          <PrivateRoute path='/private' component={Private} loggedIn={this.props.loggedIn} />
 
         </Router>
       </div>
@@ -74,4 +89,10 @@ class Header extends Component {
   }
 }
 
-export default Header
+const mapStateToProps = state => {
+  return {
+    loggedIn: state.loginReducer.loggedIn
+  }
+}
+
+export default connect(mapStateToProps)(Header)

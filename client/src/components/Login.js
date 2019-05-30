@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { connect } from 'react-redux'
-import { loginUser } from './actions'
+import { logInUser, logOutUser } from '../actions'
 
 class Login extends Component {
   state = {
@@ -12,6 +12,13 @@ class Login extends Component {
     loggedIn: false
   }
 
+
+  loginSuccess = (data) => {
+    const { logInUser, logOutUser } = this.props
+    data.loggedIn = true ? (logInUser(), this.props.history.push('/private')) : logOutUser()
+    this.setState({ messageHidden: false, messageText: data.msg })
+  }
+
   loginSubmit = (e) => {
     e.preventDefault()
     const { userEmail, userPassword } = this.state
@@ -19,12 +26,10 @@ class Login extends Component {
       userEmail,
       userPassword
     }
-    axios.post('http://localhost:4000/login', data
-    )
+    axios.post('http://localhost:4000/login', data)
       .then((res) => {
-        console.log(res.data)
-        this.setState({ messageHidden: false, messageText: res.data.msg, loggedIn: res.data.loggedIn })
-        console.log(this.state.loggedIn)
+        console.log('SERVER: ', res.data)
+        this.loginSuccess(res.data)
       })
       .catch((error) => {
         console.log(error)
@@ -33,10 +38,10 @@ class Login extends Component {
 
   reduxCall = () => {
     console.log(this.props)
-    //this.props.state.dispatch(loggedUser())
   }
 
   render() {
+    const { logInUser, logOutUser } = this.props
     return (
       <div>
         <form className="ui form" onSubmit={this.loginSubmit}>
@@ -50,9 +55,12 @@ class Login extends Component {
             <input type="password" name='password' onChange={(e) => this.setState({ userPassword: e.target.value })} />
           </div>
           <button>Login</button>
-          <button onClick={this.reduxCall}>Redux</button>
+          <br />
+          <button onClick={logInUser}>Redux +</button>
+          <button onClick={logOutUser}>Redux -</button>
+          <button onClick={this.reduxCall}>Redux Store</button>
         </form>
-      </div>
+      </div >
     )
   }
 }
@@ -60,8 +68,8 @@ class Login extends Component {
 const mapStateToProps = state => {
   return {
     state,
-    loggedIn: state.loggedIn
+    loggedIn: state.loginReducer.loggedIn
   }
 }
 
-export default connect(mapStateToProps, { loginUser })(Login)
+export default connect(mapStateToProps, { logInUser, logOutUser })(Login)
