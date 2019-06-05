@@ -3,3 +3,7 @@ export const REGISTER_FAIL = 'REGISTER_FAIL'
 export const LOG_IN = 'LOG_IN'
 export const LOG_OUT = 'LOG_OUT'
 export const LOG_IN_ADMIN = 'LOG_IN_ADMIN'
+
+export const ADD_PRODUCTS = 'ADD_PRODUCTS'
+export const REMOVE_PRODUCTS = 'REMOVE_PRODUCTS'
+export const ORDER_PRODUCTS = 'ORDER_PRODUCTS'

@@ -13,10 +13,10 @@ export const registerFail = () => {
   }
 }
 
-export const logInUser = () => {
+export const logInUser = (user) => {
   return {
-    type: LOG_IN
-    // payload: user
+    type: LOG_IN,
+    payload: user
   }
 }
 

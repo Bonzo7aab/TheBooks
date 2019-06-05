@@ -8,15 +8,7 @@ class Login extends Component {
     userEmail: '',
     userPassword: '',
     messageHidden: true,
-    messageText: '',
-    loggedIn: false
-  }
-
-
-  loginSuccess = (data) => {
-    const { logInUser, logOutUser } = this.props
-    data.loggedIn = true ? (logInUser(), this.props.history.push('/private')) : logOutUser()
-    this.setState({ messageHidden: false, messageText: data.msg })
+    messageText: ''
   }
 
   loginSubmit = (e) => {
@@ -29,11 +21,22 @@ class Login extends Component {
     axios.post('http://localhost:4000/login', data)
       .then((res) => {
         console.log('SERVER: ', res.data)
-        this.loginSuccess(res.data)
+        this.loginVerify(res.data)
       })
       .catch((error) => {
         console.log(error)
       })
+  }
+
+  loginVerify = (data) => {
+    const { logInUser, logOutUser, history } = this.props
+    if (data.loggedIn === true) {
+      logInUser(data)
+      history.push('/private')
+    } else {
+      logOutUser()
+    }
+    this.setState({ messageHidden: false, messageText: data.msg })
   }
 
   reduxCall = () => {
@@ -55,11 +58,10 @@ class Login extends Component {
             <input type="password" name='password' onChange={(e) => this.setState({ userPassword: e.target.value })} />
           </div>
           <button>Login</button>
-          <br />
-          <button onClick={logInUser}>Redux +</button>
-          <button onClick={logOutUser}>Redux -</button>
-          <button onClick={this.reduxCall}>Redux Store</button>
         </form>
+        <button onClick={logInUser}>Redux +</button>
+        <button onClick={logOutUser}>Redux -</button>
+        <button onClick={this.reduxCall}>Redux Store</button>
       </div >
     )
   }
@@ -67,8 +69,7 @@ class Login extends Component {
 
 const mapStateToProps = state => {
   return {
-    state,
-    loggedIn: state.loginReducer.loggedIn
+    login: state.login
   }
 }
 

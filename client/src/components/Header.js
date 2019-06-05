@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import { connect } from 'react-redux'
+import { logOutUser } from '../actions'
 
 import Register from './Register';
 import Login from './Login';
@@ -30,6 +31,10 @@ const PrivateRoute = ({ component: Component, loggedIn, ...rest }) => (
 
 
 class Header extends Component {
+  onLogout = () => {
+    this.props.logOutUser()
+  }
+
   render() {
     console.log(this.props)
     return (
@@ -37,9 +42,13 @@ class Header extends Component {
         <Router basename='/pl'>
           <ul className='top-menu'>
             <li>PL/EN</li>
-            <li><Link to='/basket'>Basket</Link></li>
+            <li>
+              <Link to='/basket'>Basket</Link>
+              {/* <div className="floating ui red label">22</div> */}
+            </li>
             <li><Link to='/register'>Register</Link></li>
-            <li><Link to='/login'>Login</Link></li>
+            <li onClick={this.onLogout}>Logout</li>
+            <li><Link to='/login'>Log In</Link></li>
             <li><Link to='/contact'>Contact</Link></li>
           </ul>
           <div className='header-images'>
@@ -72,11 +81,11 @@ class Header extends Component {
           <News />
           <div className='ui divider'></div>
 
+          <Route path='/' exact component={About} />
           <Route path='/register' component={Register} />
           <Route path='/login' component={Login} />
           <Route path='/basket' component={Basket} />
           <Route path='/contact' component={Contact} />
-          <Route path='/' exact component={About} />
           <Route path='/catalog' component={Catalog} />
           <Route path='/terms' component={Terms} />
           <Route path='/faq' component={Faq} />
@@ -91,8 +100,8 @@ class Header extends Component {
 
 const mapStateToProps = state => {
   return {
-    loggedIn: state.loginReducer.loggedIn
+    login: state.login
   }
 }
 
-export default connect(mapStateToProps)(Header)
+export default connect(mapStateToProps, { logOutUser })(Header)
