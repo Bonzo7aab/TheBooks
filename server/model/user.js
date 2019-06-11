@@ -21,6 +21,9 @@ const userSchema = new Schema({
   date: {
     type: String,
     default: Date.now
+  },
+  basket: {
+    type: Array
   }
 })
 
