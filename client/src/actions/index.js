@@ -1,5 +1,6 @@
-import { LOG_IN, LOG_OUT, REGISTER_SUCCESS, REGISTER_FAIL, LOG_IN_ADMIN } from '../constants'
+import { LOG_IN, LOG_OUT, REGISTER_SUCCESS, REGISTER_FAIL, LOG_IN_ADMIN, SHOW_PRODUCTS, ADD_PRODUCTS, REMOVE_PRODUCTS } from '../constants'
 
+// LOG IN
 export const registerSuccess = () => {
   return {
     type: REGISTER_SUCCESS
@@ -12,24 +13,40 @@ export const registerFail = () => {
     // payload: user
   }
 }
-
 export const logInUser = (user) => {
   return {
     type: LOG_IN,
     payload: user
   }
 }
-
 export const logOutUser = () => {
   return {
     type: LOG_OUT
-    // payload: user
+  }
+}
+export const logInADMIN = (user) => {
+  return {
+    type: LOG_IN_ADMIN,
+    payload: user
   }
 }
 
-export const logInADMIN = () => {
+// BASKET
+export const basketShow = () => {
   return {
-    type: LOG_IN_ADMIN
+    type: SHOW_PRODUCTS
     // payload: user
+  }
+}
+export const basketAdd = (product) => {
+  return {
+    type: ADD_PRODUCTS,
+    payload: product
+  }
+}
+export const basketRemove = (product) => {
+  return {
+    type: REMOVE_PRODUCTS,
+    payload: product
   }
 }

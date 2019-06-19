@@ -3,7 +3,6 @@
 }
 
 #book-list li {
-  position: relative;
   list-style-type: none;
   display: inline-block;
   margin: 10px;
@@ -14,6 +13,7 @@
 
 #book-list li img {
   display: block;
+  margin: auto;
 }
 
 #book-list li p {
@@ -22,7 +22,26 @@
 }
 
 #book-list li button {
-  position: absolute;
   bottom: 0px;
+}
+
+.book-details-deep .content {
+  border: 1px solid black;
+}
+
+.book-details-deep .content .details_image {
+  text-align: center;
+}
+
+.book-details-deep .content .details_image img {
+  height: 100%;
+  max-height: 210px;
+}
+
+.book-details-deep .content .details_content .details_close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 1.5em;
 }
 /*# sourceMappingURL=booklist.css.map */

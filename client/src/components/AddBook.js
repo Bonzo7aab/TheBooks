@@ -22,7 +22,7 @@ class AddBook extends Component {
   }
 
 
-  displayAuthors() {
+  displayAuthors = () => {
     var data = this.props.getAuthorsQuery
     if (data.loading) {
       return (<option disabled>Loading Authors...</option>)

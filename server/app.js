@@ -12,6 +12,9 @@ const passport = require('passport')
 
 const app = express()
 
+// List of ADMINS
+const ADMINS = ['sadur@gmail.com']
+
 //Passport config
 require('./config/passport')(passport)
 
@@ -102,6 +105,7 @@ app.post('/login', (req, res, next) => {
       return res.send({
         msg: 'You are logged in ' + user.userName,
         loggedIn: true,
+        loggedInADMIN: ADMINS.includes(user.userEmail) ? true : false,
         user: {
           userId: user._id,
           userDate: user.date,

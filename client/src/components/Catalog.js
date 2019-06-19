@@ -6,7 +6,6 @@ class Catalog extends Component {
   render() {
     return (
       <div>
-        <h2>Catalog</h2>
         <BookList />
         <AddBook />
       </div>

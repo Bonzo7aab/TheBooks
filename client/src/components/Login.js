@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import { connect } from 'react-redux'
-import { logInUser, logOutUser } from '../actions'
+import { logInUser, logOutUser, logInADMIN } from '../actions'
 
 class Login extends Component {
   state = {
@@ -29,10 +29,14 @@ class Login extends Component {
   }
 
   loginVerify = (data) => {
-    const { logInUser, logOutUser, history } = this.props
+    const { logInUser, logOutUser, logInADMIN, history } = this.props
     if (data.loggedIn === true) {
-      logInUser(data)
-      history.push('/private')
+      if (data.loggedInADMIN) {
+        logInADMIN(data)
+      } else {
+        logInUser(data)
+        history.push('/private')
+      }
     } else {
       logOutUser()
     }
@@ -69,8 +73,8 @@ class Login extends Component {
 
 const mapStateToProps = state => {
   return {
-    login: state.login
+    login: state.login.user
   }
 }
 
-export default connect(mapStateToProps, { logInUser, logOutUser })(Login)
+export default connect(mapStateToProps, { logInUser, logOutUser, logInADMIN })(Login)

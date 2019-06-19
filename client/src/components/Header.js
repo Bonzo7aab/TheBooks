@@ -28,28 +28,52 @@ const PrivateRoute = ({ component: Component, loggedIn, ...rest }) => (
   )} />
 )
 
-
-
 class Header extends Component {
   onLogout = () => {
     this.props.logOutUser()
   }
 
+  displayMenu = (login) => {
+    if (login.loggedIn) {
+      return (
+        <>
+          <li onClick={this.onLogout}>Logout</li>
+        </>
+      )
+    } if (login.loggedInADMIN) {
+      return (
+        <>
+          <li><a href='/admin'>ADMIN PANEL</a></li>
+          <li onClick={this.onLogout}>Logout</li>
+        </>
+      )
+    } else {
+      return (
+        <>
+          <li><Link to='/register'>Register</Link></li>
+          <li><Link to='/login'>Log In</Link></li>
+        </>
+      )
+    }
+  }
+  basketNumber = (basket) => {
+    if (basket.products.length !== 0) {
+      return <span>&#40;{basket.products.length}&#41;</span>
+    }
+  }
+
   render() {
-    console.log(this.props)
+    const { login, basket } = this.props
     return (
       <div>
         <Router basename='/pl'>
           <ul className='top-menu'>
             <li>PL/EN</li>
-            <li>
-              <Link to='/basket'>Basket</Link>
-              {/* <div className="floating ui red label">22</div> */}
-            </li>
-            <li><Link to='/register'>Register</Link></li>
-            <li onClick={this.onLogout}>Logout</li>
-            <li><Link to='/login'>Log In</Link></li>
             <li><Link to='/contact'>Contact</Link></li>
+            <li>
+              <Link to='/basket'>Basket {this.basketNumber(basket)}</Link>
+            </li>
+            {this.displayMenu(login)}
           </ul>
           <div className='header-images'>
             <img id='image1' src={image1} alt='image1' />
@@ -100,7 +124,8 @@ class Header extends Component {
 
 const mapStateToProps = state => {
   return {
-    login: state.login
+    login: state.login.user,
+    basket: state.basket
   }
 }
 

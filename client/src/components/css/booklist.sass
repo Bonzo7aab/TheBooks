@@ -1,9 +1,7 @@
 #book-list
   padding: 0
 
-
   li
-    position: relative
     list-style-type: none
     display: inline-block
     margin: 10px
@@ -12,12 +10,30 @@
     height: 300px
     img
       display: block
+      margin: auto
       
     p
       font-size: 0.9em
       margin-bottom: 5px
 
     button
-      position: absolute
+      //position: absolute
       bottom: 0px
       
+.book-details-deep
+  .content
+    border: 1px solid black
+  
+    .details_image
+      text-align: center
+      img
+        height: 100%
+        max-height: 210px
+
+    .details_content
+
+      .details_close
+        position: absolute
+        top: 0
+        right: 0
+        font-size: 1.5em

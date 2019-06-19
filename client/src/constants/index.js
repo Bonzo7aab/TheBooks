@@ -6,4 +6,5 @@ export const LOG_IN_ADMIN = 'LOG_IN_ADMIN'
 
 export const ADD_PRODUCTS = 'ADD_PRODUCTS'
 export const REMOVE_PRODUCTS = 'REMOVE_PRODUCTS'
+export const SHOW_PRODUCTS = 'SHOW_PRODUCTS'
 export const ORDER_PRODUCTS = 'ORDER_PRODUCTS'

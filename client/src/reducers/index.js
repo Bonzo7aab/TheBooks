@@ -7,5 +7,5 @@ import { userShopReducer } from './userShopReducer'
 export const reducers = combineReducers({
   registered: registerReducer,
   login: loginReducer,
-  products: userShopReducer
+  basket: userShopReducer
 })

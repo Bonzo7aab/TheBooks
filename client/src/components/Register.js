@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 
+import './css/register.css'
+
 class Register extends Component {
   state = {
     userName: '',
@@ -12,7 +14,24 @@ class Register extends Component {
     messageText: []
   }
 
+  displayMessage = () => {
+    const removeMessage = (message) => {
+      let newMessages = this.state.messageText.filter(text => text !== message)
+      this.setState({ messageText: newMessages })
+    }
 
+    if (this.messageText === 0) {
+      return ''
+    }
+    return (
+      this.state.messageText.map(message => (
+        <div className="ui red message" key={message.msg} hidden={this.state.messageHidden}>
+          {message.msg}
+          <span className='close-message' onClick={() => removeMessage(message)}><i className="window close outline icon"></i></span>
+        </div>
+      ))
+    )
+  }
 
   formSubmit = (e) => {
     e.preventDefault()
@@ -24,8 +43,7 @@ class Register extends Component {
       userPassword,
       userConfirmPassword
     }
-    axios.post('http://localhost:4000/register', data
-    )
+    axios.post('http://localhost:4000/register', data)
       .then((res) => {
         this.setState({ messageHidden: false, messageText: res.data })
       })
@@ -36,13 +54,11 @@ class Register extends Component {
 
   render() {
     return (
-      <div>
+      <div className='qwe'>
         <form className="ui form" onSubmit={this.formSubmit}>
-          {this.state.messageText.map(message => (
-            <div className="ui red message" key={message.msg} hidden={this.state.messageHidden}>{message.msg}</div>
-          ))}
+          {this.displayMessage()}
           <div className="field">
-            <label>Name</label>
+            <label className='asa'>Name</label>
             <input type="text" name='name' onChange={(e) => this.setState({ userName: e.target.value })} />
           </div>
           <div className="field">
