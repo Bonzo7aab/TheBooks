@@ -3,21 +3,48 @@ const _ = require('lodash')
 const Book = require('../model/book')
 const Author = require('../model/author')
 const User = require('../model/user')
+const Orders = require('../model/orders')
 
-const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLID, GraphQLInt, GraphQLList, GraphQLNonNull } = graphql;
+const { GraphQLObjectType, GraphQLString, GraphQLSchema, GraphQLID, GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLBoolean } = graphql;
 
 
-// const UserType = new GraphQLObjectType({
-//   name: 'User',
-//   fileds: () => ({
-//     id: { type: GraphQLID },
-//     name: { type: GraphQLString },
-//     surname: { type: GraphQLString },
-//     email: { type: GraphQLString },
-//     password: { type: GraphQLString },
-//     confirmPassword: { type: GraphQLString }
-//   })
-// })
+const OrderType = new GraphQLObjectType({
+  name: 'Order',
+  fields: () => ({
+    id: { type: GraphQLID },
+    // user: { type: new GraphQLList(UserType) },
+    userId: { type: GraphQLString },
+    books: { type: GraphQLString },
+    isPaid: { type: GraphQLBoolean },
+    isDelivered: { type: GraphQLBoolean },
+    user: {
+      type: UserType,
+      resolve(parent, args) {
+        return User.findById(parent.userId)
+      }
+    }
+  })
+})
+
+
+const UserType = new GraphQLObjectType({
+  name: 'User',
+  fields: () => ({
+    id: { type: GraphQLID },
+    userName: { type: GraphQLString },
+    userSurname: { type: GraphQLString },
+    userEmail: { type: GraphQLString },
+    ordersCurrent: {
+      type: new GraphQLList(BookType),
+      resolve(parent, args) {
+        return Book.findById(parent.book.id)
+      },
+      // past: { type: new GraphQLList(BookType) }
+    },
+    date: { type: GraphQLString }
+
+  })
+})
 
 
 const BookType = new GraphQLObjectType({
@@ -68,6 +95,25 @@ const AuthorType = new GraphQLObjectType({
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
+
+    orders: {
+      type: OrderType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        return Orders.findById(args.id)
+      }
+    },
+
+    user: {
+      type: UserType,
+      args: { id: { type: GraphQLID } },
+      resolve(parent, args) {
+        // return _.find(books, { id: args.id })
+        return User.findById(args.id)
+      }
+    },
+
+
     book: {
       type: BookType,
       args: { id: { type: GraphQLID } },

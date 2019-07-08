@@ -13,7 +13,8 @@ const userSchema = new Schema({
   userEmail: {
     type: String,
     required: true
-  },
+  }
+  ,
   userPassword: {
     type: String,
     required: true
@@ -22,9 +23,11 @@ const userSchema = new Schema({
     type: String,
     default: Date.now
   },
-  basket: {
-    type: Array
-  }
+  ordersCurrent: []
+  // orders: {
+  //   current: [],
+  //   past: []
+  // }
 })
 
 module.exports = mongoose.model('User', userSchema)
