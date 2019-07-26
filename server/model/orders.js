@@ -3,10 +3,11 @@ const Schema = mongoose.Schema
 
 const ordersSchema = new Schema({
   // user: Schema.Types.ObjectId,
-  userId: String,
-  books: String,
+  // books: String,
   isPaid: Boolean,
-  isDelivered: Boolean
+  isDelivered: Boolean,
+  userId: String,
+  booksId: [String]
   // for more books books: Array
 })
 

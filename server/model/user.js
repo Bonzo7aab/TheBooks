@@ -23,7 +23,7 @@ const userSchema = new Schema({
     type: String,
     default: Date.now
   },
-  ordersCurrent: []
+  // orders: []
   // orders: {
   //   current: [],
   //   past: []

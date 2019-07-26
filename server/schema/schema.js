@@ -12,15 +12,25 @@ const OrderType = new GraphQLObjectType({
   name: 'Order',
   fields: () => ({
     id: { type: GraphQLID },
-    // user: { type: new GraphQLList(UserType) },
-    userId: { type: GraphQLString },
-    books: { type: GraphQLString },
     isPaid: { type: GraphQLBoolean },
     isDelivered: { type: GraphQLBoolean },
+    userId: { type: GraphQLString },
     user: {
       type: UserType,
       resolve(parent, args) {
         return User.findById(parent.userId)
+      }
+    },
+    //booksId: { type: GraphQLString },
+    books: {
+      type: new GraphQLList(BookType),
+      resolve(parent, args) {
+        // return Book.findById(parent.booksId)
+        // return _.find(Book, { id: parent.booksId })
+        return _.filter(Book, { id: parent.booksId })
+        // return Book.find({ id: parent.booksId })
+        // return Book.filter(book => book.id = parent.booksId)
+        // return [{ name: 'adsad', price: 9 }, { name: 'adsad', price: 9 }] //works with type list!
       }
     }
   })
@@ -34,10 +44,11 @@ const UserType = new GraphQLObjectType({
     userName: { type: GraphQLString },
     userSurname: { type: GraphQLString },
     userEmail: { type: GraphQLString },
-    ordersCurrent: {
-      type: new GraphQLList(BookType),
+    orderId: { type: GraphQLString },
+    order: {
+      type: new GraphQLList(OrderType),
       resolve(parent, args) {
-        return Book.findById(parent.book.id)
+        return Orders.find({ userId: parent.id })
       },
       // past: { type: new GraphQLList(BookType) }
     },
@@ -65,6 +76,7 @@ const BookType = new GraphQLObjectType({
     condition: { type: GraphQLString },
     nrPages: { type: GraphQLInt },
     shelveInShop: { type: GraphQLInt },
+    authorId: { type: GraphQLInt },
     author: {
       type: AuthorType,
       resolve(parent, args) {
@@ -96,7 +108,7 @@ const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
   fields: {
 
-    orders: {
+    order: {
       type: OrderType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
@@ -108,12 +120,23 @@ const RootQuery = new GraphQLObjectType({
       type: UserType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        // return _.find(books, { id: args.id })
         return User.findById(args.id)
       }
     },
 
 
+    orders: {
+      type: new GraphQLList(OrderType),
+      resolve(parent, args) {
+        return Orders.find()
+      }
+    },
+    users: {
+      type: new GraphQLList(UserType),
+      resolve(parent, args) {
+        return User.find()
+      }
+    },
     book: {
       type: BookType,
       args: { id: { type: GraphQLID } },
@@ -133,14 +156,12 @@ const RootQuery = new GraphQLObjectType({
     books: {
       type: new GraphQLList(BookType),
       resolve(parent, args) {
-        // return books
         return Book.find()
       }
     },
     authors: {
       type: new GraphQLList(AuthorType),
       resolve(parent, args) {
-        // return authors
         return Author.find()
       }
     }
