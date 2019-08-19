@@ -23,14 +23,14 @@ class Register extends Component {
     if (this.messageText === 0) {
       return ''
     }
-    return (
+
       this.state.messageText.map(message => (
         <div className="ui red message" key={message.msg} hidden={this.state.messageHidden}>
           {message.msg}
           <span className='close-message' onClick={() => removeMessage(message)}><i className="window close outline icon"></i></span>
         </div>
       ))
-    )
+    
   }
 
   formSubmit = (e) => {

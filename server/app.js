@@ -5,15 +5,19 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const User = require('./model/user')
+const Book = require('./model/book')
 const bcrypt = require('bcryptjs')
 const session = require('express-session')
+const MongoStore = require('connect-mongo')(session)
 const passport = require('passport')
-
+const _ = require('lodash')
 
 const app = express()
 
 // List of ADMINS
 const ADMINS = ['sadur@gmail.com']
+
+const mongodbURL = 'mongodb+srv://bonzo:Matadoro1@cluster0-4mujf.mongodb.net/test?retryWrites=true'
 
 //Passport config
 require('./config/passport')(passport)
@@ -25,17 +29,29 @@ app.use(cors())
 app.use(session({
   secret: 'secret',
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  store: new MongoStore({
+    url: mongodbURL
+  })
 }))
 
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect('mongodb+srv://bonzo:Matadoro1@cluster0-4mujf.mongodb.net/test?retryWrites=true', { useNewUrlParser: true })
+
+mongoose.connect(mongodbURL, { useNewUrlParser: true }, )
+mongoose.connection.on('error', function(error) {
+  console.error('Database connection error:', error);
+});
 mongoose.connection.once('open', () => {
   console.log('connected to DB')
 })
+
+//mongo mongodb+srv://cluster0-4mujf.mongodb.net/test?retryWrites=true -u bonzo -p Matadoro1
+// 192.46.111.46
+
+
 
 app.use('/graphql', graphqlHTTP({
   schema,
@@ -106,7 +122,7 @@ app.post('/login', (req, res, next) => {
         msg: 'You are logged in ' + user.userName,
         loggedIn: true,
         loggedInADMIN: ADMINS.includes(user.userEmail) ? true : false,
-        user: {
+        userDetails: {
           userId: user._id,
           userDate: user.date,
           userName: user.userName,
@@ -118,8 +134,18 @@ app.post('/login', (req, res, next) => {
   })(req, res, next)
 })
 
-
-
+app.post('/newBooks', (req, res) => {
+  const data = req.body
+  const object = []
+  for (let i = 1; i < data.length -1; i++) {
+    object.push(_.zipObject(data[0], data[i]))
+    
+  }
+  mongoose.connection.db.collection('books').insertMany(object, () => {
+    console.log('CSV added to MongoDB')
+    return res.send(object)
+  })
+})
 
 
 app.listen(4000, () => {

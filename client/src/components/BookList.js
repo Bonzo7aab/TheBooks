@@ -9,12 +9,11 @@ import './css/booklist.css'
 
 class BookList extends Component {
   state = {
-    basket: [],
     showDetails: null
   }
 
-  addOrRemoveFromBasket = (book) => {
-    if (!this.props.basket.products.includes(book)) {
+  addOrRemoveFromBasket = (book, basket) => {
+    if (!basket.products.includes(book)) {
       return (
         <button className="ui green button" onClick={() => this.props.basketAdd(book)}>
           <i className="plus icon"></i>
@@ -31,7 +30,7 @@ class BookList extends Component {
     }
   }
 
-  showBookDetails = (book) => (
+  showBookDetails = (book, basket, user) => (
     <div className='book-details-deep'>
       <div className='content ui grid'>
         <div className='two column row'>
@@ -57,7 +56,7 @@ class BookList extends Component {
                 <p>In stock: {book.nrInStock}</p>
                 <p>Shelves: {book.shelveInShop}</p>
                 <i className="details_close close icon" onClick={() => this.setState({ showDetails: null })}></i>
-                {this.addOrRemoveFromBasket(book)}
+                {!user.loggedIn ? <div>Log in to order</div> : this.addOrRemoveFromBasket(book, basket)}
               </div>
             </div>
             <div className='row'>
@@ -70,18 +69,8 @@ class BookList extends Component {
     </div>
   )
 
-  addToBusket = (book) => {
-    if (!this.state.basket.includes(book)) {
-      this.setState({ basket: [...this.state.basket, book] })
-      this.props.basketAdd(book)
-    }
-  }
-  basketRemove = (book) => {
-    this.props.basketRemove(book)
-  }
-
-  displayBooks = () => {
-    var data = this.props.data
+  displayBooks = (basket, user) => {
+    let {data} = this.props
     if (data.loading) {
       return <div className="ui active centered inline loader"></div>
     }
@@ -95,7 +84,7 @@ class BookList extends Component {
           <p>{book.author.name}</p>
           <p>{book.price}</p>
           <button onClick={() => this.setState({ showDetails: book })}>Details</button>
-          {this.addOrRemoveFromBasket(book)}
+          {!user.loggedIn ? <div>Log in to order</div> : this.addOrRemoveFromBasket(book, basket)}
         </li >
       )
     })
@@ -105,13 +94,15 @@ class BookList extends Component {
     console.log('STATE: ', this.state)
     console.log('PROPS: ', this.props)
   }
+
   render() {
+    const {basket, user} = this.props
     return (
       <div>
-        {this.state.showDetails ? this.showBookDetails(this.state.showDetails) : null}
+        {this.state.showDetails ? this.showBookDetails(this.state.showDetails, basket, user) : null}
         <h2>Catalog</h2>
         <ul id='book-list'>
-          {this.displayBooks()}
+          {this.displayBooks(basket, user)}
         </ul>
         <BookDetails bookId={this.state.selected} />
         <button onClick={this.seeState}>State</button>
@@ -122,10 +113,10 @@ class BookList extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    basket: state.basket
+    user: state.user.details.login,
+    basket: state.user.basket
   }
 }
-
 
 const graphqla = graphql(getBooksQuery)(BookList)
 

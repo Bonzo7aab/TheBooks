@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { basketRemove } from '../actions'
+import { basketAdd, basketRemove } from '../actions'
 
 import './css/basket.css'
 
@@ -33,8 +33,11 @@ class Basket extends Component {
 
   onPayment = () => {
     if (!this.props.login.loggedIn) {
-      this.props.history.push('/login')
+      return this.props.history.push('/login')
     }
+
+    // TODO  if user is loggdin add to his order
+    console.log("Accept PAYMENT")
   }
 
   render() {
@@ -64,9 +67,9 @@ class Basket extends Component {
 
 const mapStateToProps = state => {
   return {
-    basket: state.basket,
-    login: state.login.user
+    basket: state.user.basket,
+    login: state.user.details.login
   }
 }
 
-export default connect(mapStateToProps, { basketRemove })(Basket)
+export default connect(mapStateToProps, { basketAdd, basketRemove })(Basket)

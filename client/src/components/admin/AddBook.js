@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { graphql, compose } from 'react-apollo'
-import { getAuthorsQuery, addBookMutation, getBooksQuery } from '../queries/queries'
+import { getAuthorsQuery, addBookMutation, getBooksQuery } from '../../queries/queries'
 
 class AddBook extends Component {
   state = {
@@ -18,7 +18,8 @@ class AddBook extends Component {
     description: '',
     condition: '',
     nrPages: null,
-    shelveInShop: null
+    shelveInShop: null,
+    selectedCSV: ''
   }
 
 
@@ -57,7 +58,8 @@ class AddBook extends Component {
 
   render() {
     return (
-      <form onSubmit={this.submitForm}>
+      <div>
+      <form className='ui form' onSubmit={this.submitForm}>
         <div>
           <label>Book name:</label>
           <input type='text' onChange={(e) => this.setState({ name: e.target.value })} />
@@ -121,8 +123,9 @@ class AddBook extends Component {
           <label>Shellve in shop:</label>
           <input type='text' onChange={(e) => this.setState({ shelveInShop: parseInt(e.target.value) })} />
         </div>
-        <button>+</button>
+        <button className='ui button'>Add Book</button>
       </form>
+      </div>
     )
   }
 }

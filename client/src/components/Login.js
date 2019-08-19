@@ -11,21 +11,23 @@ class Login extends Component {
     messageText: ''
   }
 
-  loginSubmit = (e) => {
+  loginSubmit = async e => {
     e.preventDefault()
-    const { userEmail, userPassword } = this.state
-    let data = {
-      userEmail,
-      userPassword
+    // const { userEmail, userPassword } = this.state
+    // let inputData = {
+    //   userEmail,
+    //   userPassword
+    // }
+
+    
+    // LOGIN FOR ADMIN SIMPLE
+    let inputData = {
+      userEmail: 'sadur@gmail.com',
+      userPassword: '123456'
     }
-    axios.post('http://localhost:4000/login', data)
-      .then((res) => {
-        console.log('SERVER: ', res.data)
-        this.loginVerify(res.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    let res = await axios.post('http://localhost:4000/login', inputData)
+      console.log('SERVER: ', res.data)
+      this.loginVerify(res.data)
   }
 
   loginVerify = (data) => {
@@ -33,6 +35,7 @@ class Login extends Component {
     if (data.loggedIn === true) {
       if (data.loggedInADMIN) {
         logInADMIN(data)
+        history.push('/admin')
       } else {
         logInUser(data)
         history.push('/private')
@@ -43,12 +46,7 @@ class Login extends Component {
     this.setState({ messageHidden: false, messageText: data.msg })
   }
 
-  reduxCall = () => {
-    console.log(this.props)
-  }
-
   render() {
-    const { logInUser, logOutUser } = this.props
     return (
       <div>
         <form className="ui form" onSubmit={this.loginSubmit}>
@@ -63,9 +61,6 @@ class Login extends Component {
           </div>
           <button>Login</button>
         </form>
-        <button onClick={logInUser}>Redux +</button>
-        <button onClick={logOutUser}>Redux -</button>
-        <button onClick={this.reduxCall}>Redux Store</button>
       </div >
     )
   }
@@ -73,7 +68,7 @@ class Login extends Component {
 
 const mapStateToProps = state => {
   return {
-    login: state.login.user
+    login: state.user.details.login
   }
 }
 

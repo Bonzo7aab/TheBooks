@@ -14,37 +14,49 @@ import Terms from './Terms';
 import Faq from './Faq'
 import MicroLibrary from './MicroLibrary'
 import Private from './Private'
+import Admin from './admin/Admin'
 
 import './css/header.css'
 import image1 from '../utils/image1.png'
 import logo from '../utils/logo.png'
 
 
-const PrivateRoute = ({ component: Component, loggedIn, ...rest }) => (
+const PrivateRoute = ({ component: Component, login, ...rest }) => (
   <Route {...rest} render={props => (
-    loggedIn === true
+    login.loggedIn
       ? <Component {...props} />
       : <Redirect to='/contact' />
   )} />
 )
 
-class Header extends Component {
-  onLogout = () => {
-    this.props.logOutUser()
-  }
+const PrivateRouteAdmin = ({ component: Component, loginAdmin, ...rest }) => (
+  <Route {...rest} render={props => (
+    loginAdmin.loggedInADMIN
+      ? <Component {...props} />
+      : <Redirect to='/login' />
+  )} />
+)
 
-  displayMenu = (login) => {
-    if (login.loggedIn) {
+class Header extends Component {
+  onLogout = () => (
+    this.props.logOutUser()
+  )
+
+  displayMenu = (login, basket) => {
+   if (login.loggedInADMIN) {
+    return (
+      <>
+        <li><Link to='/admin'>ADMIN PANEL</Link></li>
+        <li><Link to='/about' onClick={this.onLogout}>Logout</Link></li>
+      </>
+    )
+  } if (login.loggedIn) {
       return (
         <>
-          <li onClick={this.onLogout}>Logout</li>
-        </>
-      )
-    } if (login.loggedInADMIN) {
-      return (
-        <>
-          <li><a href='/admin'>ADMIN PANEL</a></li>
-          <li onClick={this.onLogout}>Logout</li>
+        <li>
+          <Link to='/basket'>Basket {this.basketNumber(basket)}</Link>
+        </li>
+        <li><Link to='/about' onClick={this.onLogout}>Logout</Link></li>
         </>
       )
     } else {
@@ -56,6 +68,7 @@ class Header extends Component {
       )
     }
   }
+
   basketNumber = (basket) => {
     if (basket.products.length !== 0) {
       return <span>&#40;{basket.products.length}&#41;</span>
@@ -70,10 +83,7 @@ class Header extends Component {
           <ul className='top-menu'>
             <li>PL/EN</li>
             <li><Link to='/contact'>Contact</Link></li>
-            <li>
-              <Link to='/basket'>Basket {this.basketNumber(basket)}</Link>
-            </li>
-            {this.displayMenu(login)}
+            {this.displayMenu(login, basket)}
           </ul>
           <div className='header-images'>
             <img id='image1' src={image1} alt='image1' />
@@ -114,7 +124,8 @@ class Header extends Component {
           <Route path='/terms' component={Terms} />
           <Route path='/faq' component={Faq} />
           <Route path='/microlibrary' component={MicroLibrary} />
-          <PrivateRoute path='/private' component={Private} loggedIn={this.props.loggedIn} />
+          <PrivateRoute path='/private' component={Private} login={this.props.login} />
+          <PrivateRouteAdmin path='/admin' component={Admin} loginAdmin={this.props.login} />
 
         </Router>
       </div>
@@ -124,8 +135,9 @@ class Header extends Component {
 
 const mapStateToProps = state => {
   return {
-    login: state.login.user,
-    basket: state.basket
+    login: state.user.details.login,
+    basket: state.user.basket,
+    STORE: state
   }
 }
 
