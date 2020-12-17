@@ -15,9 +15,9 @@ const _ = require('lodash')
 const app = express()
 
 // List of ADMINS
-const ADMINS = ['sadur@gmail.com']
+const ADMINS = ['bonzoTest@gmail.com']
 
-const mongodbURL = 'mongodb+srv://bonzo:Matadoro1@cluster0-4mujf.mongodb.net/test?retryWrites=true'
+const mongodbURL = MONGODB_URL
 
 //Passport config
 require('./config/passport')(passport)
@@ -47,10 +47,6 @@ mongoose.connection.on('error', function(error) {
 mongoose.connection.once('open', () => {
   console.log('connected to DB')
 })
-
-//mongo mongodb+srv://cluster0-4mujf.mongodb.net/test?retryWrites=true -u bonzo -p Matadoro1
-// 192.46.111.46
-
 
 
 app.use('/graphql', graphqlHTTP({
